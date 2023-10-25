@@ -3,7 +3,8 @@ pipeline{
 
     stages{
         stage("Login to docker hub"){
-        script {
+            steps{
+                script {
                     sh "echo 'login to docker hub'"
                     // sh 'docker --version'
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
@@ -13,7 +14,8 @@ pipeline{
                         '''
                         }
                     }
-                }
+            }
+        }
         stage("build docker images") {
             steps {
                 sh '''
