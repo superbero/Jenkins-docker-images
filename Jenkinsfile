@@ -2,20 +2,20 @@ pipeline{
     agent any
 
     stages{
-        stage('Checkout Repo 1') {
-            steps {
-                script {
-                    // checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: 'https://github.com/superbero/Jenkins-docker-images.git']]])
-                    sh 'git clone https://github.com/superbero/Jenkins-docker-images.git'
-                }
-            }
-        }
+        // stage('Checkout Repo 1') {
+        //     steps {
+        //         script {
+        //             // checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: 'https://github.com/superbero/Jenkins-docker-images.git']]])
+        //             sh 'git clone https://github.com/superbero/Jenkins-docker-images.git'
+        //         }
+        //     }
+        // }
 
         stage('Checkout Repo 2') {
             steps {
                 script {
                     // checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
-                    sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes.git'
+                    sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes/'
                 }
             }
         }
