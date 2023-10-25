@@ -4,7 +4,10 @@ pipeline{
     stages{
         stage("pre-build")
         {
-            checkout(scm)
+            steps {
+                checkout(scm)
+            }
+           
         }
         stage("build docker images"){
         script {
