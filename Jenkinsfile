@@ -5,11 +5,11 @@ pipeline{
         stage("pre-build")
         {
             steps {
-    
+                checkout scm: https://github.com/superbero/Jenkins-docker-images.git
             }
            
         }
-        stage("build docker images"){
+        stage("Login to Docker"){
         steps{
             script {
                     sh "echo 'login to docker hub'"
