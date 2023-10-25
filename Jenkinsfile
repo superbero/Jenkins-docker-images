@@ -7,9 +7,9 @@ pipeline{
 
             steps{
                 //clone first repo
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-docker-images.git']]])
+                checkout([$class: 'MultiSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-docker-images.git']]])
                 //clone second repo
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
+                checkout([$class: 'MultiSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
 
                 // git (url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git', branch: 'master' )
             }
