@@ -2,11 +2,7 @@ pipeline{
     agent any
 
     stages{
-        stage("pre-build")
-        {
-            checkout(scm)
-        }
-        stage("build docker images"){
+        stage("Login to docker hub"){
         script {
                     sh "echo 'login to docker hub'"
                     // sh 'docker --version'
