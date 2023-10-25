@@ -14,8 +14,8 @@ pipeline{
         stage('Checkout Repo 2') {
             steps {
                 script {
-                    // checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
-                    sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes/'
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[ url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
+                    // sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes/'
                 }
             }
         }
