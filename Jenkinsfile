@@ -5,7 +5,7 @@ pipeline{
         stage("pre-build")
         {
             steps {
-                checkout(scm)
+    
             }
            
         }
