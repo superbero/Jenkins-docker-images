@@ -2,16 +2,18 @@ pipeline{
     agent any
 
     stages{
-        // stage ("pre-build")
-        // {
+        stage ("pre-build")
+        {
 
-        //     steps{
-        //         //clone first repo
-        //         git(url: 'https://github.com/superbero/Jenkins-docker-images.git', branch:'master')
-        //         //clone second repo
-        //         git (url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git', branch: 'master' )
-        //     }
-        // }
+            steps{
+                //clone first repo
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-docker-images.git']]])
+                //clone second repo
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git']]])
+
+                // git (url: 'https://github.com/superbero/Jenkins-namespaces-volumes.git', branch: 'master' )
+            }
+        }
         stage("Login to docker hub"){
             steps{
                 script {
