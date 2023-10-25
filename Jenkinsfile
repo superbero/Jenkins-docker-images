@@ -2,13 +2,6 @@ pipeline{
     agent any
 
     stages{
-        stage("pre-build")
-        {
-            steps {
-                checkout scm: https://github.com/superbero/Jenkins-docker-images.git
-            }
-           
-        }
         stage("Login to Docker"){
         steps{
             script {
@@ -30,19 +23,19 @@ pipeline{
                 echo "building movie-service image"
                 ls
                 cd movie-service
-                $docker build . -t superbero/movie-service:latest
+                $docker build . -t superbero/movie_service:latest
                 echo "building cast-service image"
                 cd ..
                 cd cast-service
-                $docker build . -t superbero/cast-service:latest
+                $docker build . -t superbero/cast_service:latest
                 '''
             }
         }
         stage("push to docker hub") {
             steps {
                 sh '''
-                $docker push superbero/movie-service:latest
-                $docker push superbero/cast-service:latest
+                $docker push superbero/movie_service:latest
+                $docker push superbero/cast_service:latest
                 '''
             }
         }
