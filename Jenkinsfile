@@ -20,13 +20,9 @@ pipeline{
             steps {
                 sh '''
                 echo "building movie-service image"
-                ls
-                cd movie-service
-                $docker build . -t superbero/movie_service:latest
+                $docker build docker-images/. -t superbero/movie_service:latest
                 echo "building cast-service image"
-                cd ..
-                cd cast-service
-                $docker build . -t superbero/cast_service:latest
+                $docker build docker-images/. -t superbero/cast_service:latest
                 '''
             }
         }
