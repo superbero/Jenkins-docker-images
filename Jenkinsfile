@@ -67,7 +67,8 @@ pipeline{
         }
         stage("Deploy movie-service"){
             steps{
-                def namespaces = ['dev', 'staging', 'prod', 'qa']
+                script{
+                    def namespaces = ['dev', 'staging', 'prod', 'qa']
                         namespaces.each { namespace ->
                         echo "Deploying ${namespace} node"
                         try {
@@ -78,6 +79,8 @@ pipeline{
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
                             }
+                    }
+                
                 }
             }
         }
