@@ -88,5 +88,12 @@ pipeline{
                 }
             }
         }
+        stage("Deploying cast-service"){
+            steps{
+                script{
+                    echo "Deploying cast service"
+                }
+            }
+        }
     }
 }
