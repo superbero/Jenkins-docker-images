@@ -54,7 +54,7 @@ pipeline{
         stage ("Deploy volumes"){
             steps {
                 sh '''
-                $kubectl apply -f namespaces_volumes/namespaces
+                $kubectl apply -f namespaces_volumes/volumes/
                 '''
             }
         }
