@@ -2,43 +2,19 @@ pipeline{
     agent any
 
     stages{
-        stage('Checkout Repo 2') {
+        stage('Checkout scm') {
             steps {
                 script {
-                    sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes/'
-                    sh ' mv "jenkins-namespaces-volumes" "namespaces_volumes"'
-                }
-            }
-        }
-        stage("Checkout Repo 4"){
-            steps {
-                script {
-                    sh 'git clone https://github.com/superbero/Jenkins-namespaces-volumes/'
-                    sh ' mv "jenkins-namespaces-volumes" "namespaces_volumes"'
-                }
-            }
-        }
-        stage("Checkout Repo 5"){
-            steps {
-                script {
-                    sh 'git clone https://github.com/superbero/Jenkins-movie-service/'
-                    sh ' mv "Jenkins-movie-service" "movie-service"'
-                }
-            }
-        }
-        stage("Checkout Repo 6"){
-            steps {
-                script {
-                    sh 'git clone https://github.com/superbero/Jenkins-cast-service/'
-                    sh ' mv "Jenkins-cast-service" "cast-service"'
-                }
-            }
-        }
-         stage("Checkout Repo 7"){
-            steps {
-                script {
-                    sh 'git clone https://github.com/superbero/Jenkins-api-service/'
-                    sh ' mv "Jenkins-api-service" "api-service"'
+                    sh '''
+                    git clone https://github.com/superbero/Jenkins-namespaces-volumes/
+                    mv "jenkins-namespaces-volumes" "namespaces_volumes"
+                    git clone https://github.com/superbero/Jenkins-movie-service/'
+                    mv "Jenkins-movie-service" "movie-service"'
+                    git clone https://github.com/superbero/Jenkins-cast-service/'
+                    mv "Jenkins-cast-service" "cast-service"'
+                    git clone https://github.com/superbero/Jenkins-api-service/'
+                    mv "Jenkins-api-service" "api-service"'
+                    '''
                 }
             }
         }
@@ -78,14 +54,14 @@ pipeline{
         stage ("Deploy volumes"){
             steps {
                 sh '''
-                $kubectl apply -f namespaces_volumes/namespaces
+                $kubectl apply -f ./namespaces_volumes/namespaces
                 '''
             }
         }
         stage ("Deploy namespaces"){
             steps {
                 sh '''
-                $kubectl apply -f namespaces_volumes/namespaces/
+                $kubectl apply -f ./namespaces_volumes/namespaces/
                 '''
             }
         }
