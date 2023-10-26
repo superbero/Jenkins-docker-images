@@ -65,5 +65,20 @@ pipeline{
                 '''
             }
         }
+        stage("Deploy movie-service"){
+            steps{
+                def namespaces = ['dev', 'staging', 'prod', 'qa']
+                        namespaces.each { namespace ->
+                        echo "Deploying ${namespace} node"
+                        try {
+                            sh "$helm install jenkins-movie-service movie-service/ --values=movie-service/values.yaml -n ${namespace}"
+
+                        } catch(Exception e){
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                            }
+            }
+        }
     }
 }
