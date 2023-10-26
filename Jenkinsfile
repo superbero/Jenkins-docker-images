@@ -78,6 +78,7 @@ pipeline{
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
                             }
+                }
             }
         }
     }
