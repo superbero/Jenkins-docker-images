@@ -76,6 +76,7 @@ pipeline{
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' movie-service/values.yaml"
                             sh "$helm install jenkins-movie-service movie-service/ --values=movie-service/values.yaml -n ${namespace}"
                             sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' movie-service/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
             
                         } catch(Exception e)
                         {
