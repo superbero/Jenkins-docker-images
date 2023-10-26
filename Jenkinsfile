@@ -72,8 +72,8 @@ pipeline{
                         namespaces.each { namespace ->
                         echo "Deploying ${namespace} node"
                         try {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' movie-service/values.yaml"
                             sh "$helm install jenkins-movie-service movie-service/ --values=movie-service/values.yaml -n ${namespace}"
-
                         } catch(Exception e){
                             echo "Namespace ${namespace} not found, creating..."
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
