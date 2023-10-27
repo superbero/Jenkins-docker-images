@@ -37,9 +37,9 @@ pipeline{
                 sh '''
                 cd docker-images/
                 echo "building movie-service image"
-                $docker build . -t superbero/movie_service:latest
+                $docker build movie-service/. -t superbero/movie_service:latest
                 echo "building cast-service image"
-                $docker build . -t superbero/cast_service:latest
+                $docker build cast-service/. -t superbero/cast_service:latest
                 '''
             }
         }
