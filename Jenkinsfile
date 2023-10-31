@@ -76,7 +76,7 @@ pipeline{
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' databases/postgres/values.yaml"
-                            sh "$helm install jenkins-database-service database/postgres/ --values=databases/postgres/values.yaml -n ${namespace}"
+                            sh "$helm install jenkins-database-service databases/postgres/ --values=databases/postgres/values.yaml -n ${namespace}"
                             sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' databases/postgres/values.yaml"
                             sh "$kubectl get all -n ${namespace}"
             
