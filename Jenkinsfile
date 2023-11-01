@@ -186,25 +186,33 @@ pipeline{
             steps {
                 script {
                     if (env.SERVICE_NAME == 'Upgrade api-service') {
+                        sh '''
                         $helm upgrade jenkins-api-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-api-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-api-service . --values=values.yaml -n staging
+                        '''
                         // Add steps to update service1
                     } else if (env.SERVICE_NAME == 'Upgrade database') {
+                        sh '''
                         $helm upgrade jenkins-database-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-database-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-database-service . --values=values.yaml -n staging
+                        '''
                         // Add steps to update service2
                     } else if (env.SERVICE_NAME == 'Upgrade cast-service') {
                         // Add steps to update service2
+                        sh '''
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n staging
+                        '''
                     } else if (env.SERVICE_NAME == 'Upgrade movie-service') {
                         // Add steps to update service3
+                        sh'''
                         $helm upgrade jenkins-movie-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-movie-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-movie-service . --values=values.yaml -n staging
+                        '''
                     } else {
                         error 'Invalid service selected'
                     }
