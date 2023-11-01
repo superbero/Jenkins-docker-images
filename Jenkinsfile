@@ -70,7 +70,7 @@ pipeline{
         }
         stage ("Deploy volumes"){
             when{
-                expression == 'New Deployment'
+                expression { env.SERVICE_NAME == 'New Deployment'} 
             }
             steps {
                 sh '''
