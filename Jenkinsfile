@@ -79,6 +79,9 @@ pipeline{
             }
         }
         stage ("Deploy namespaces"){
+            when{
+                expression { env.SERVICE_NAME == 'New Deployment'} 
+            }
             steps {
                 sh '''
                 $kubectl apply -f namespaces_volumes/namespaces/
@@ -207,31 +210,31 @@ pipeline{
                     env.SERVICE_UPGRADE = userInput
                     if (env.SERVICE_UPGRADE == 'Upgrade api-service') {
                         sh '''
-                        $helm upgrade jenkins-api-service . --values=values.yaml -n dev
-                        $helm upgrade jenkins-api-service . --values=values.yaml -n qa
-                        $helm upgrade jenkins-api-service . --values=values.yaml -n staging
+                        $helm upgrade jenkins-api-service . --values=api-service/values.yaml -n dev
+                        $helm upgrade jenkins-api-service . --values=api-service/values.yaml -n qa
+                        $helm upgrade jenkins-api-service . --values=api-service/values.yaml -n staging
                         '''
                         // Add steps to update service1
                     } else if (env.SERVICE_UPGRADE == 'Upgrade database') {
                         sh '''
-                        $helm upgrade jenkins-database-service . --values=values.yaml -n dev
-                        $helm upgrade jenkins-database-service . --values=values.yaml -n qa
-                        $helm upgrade jenkins-database-service . --values=values.yaml -n staging
+                        $helm upgrade jenkins-database-service . --values=databases/postgres/values.yaml -n dev
+                        $helm upgrade jenkins-database-service . --values=databases/postgres/values.yaml -n qa
+                        $helm upgrade jenkins-database-service . --values=databases/postgres/values.yaml -n staging
                         '''
                         // Add steps to update service2
                     } else if (env.SERVICE_UPGRADE == 'Upgrade cast-service') {
                         // Add steps to update service2
                         sh '''
-                        $helm upgrade jenkins-cast-service . --values=values.yaml -n dev
-                        $helm upgrade jenkins-cast-service . --values=values.yaml -n qa
-                        $helm upgrade jenkins-cast-service . --values=values.yaml -n staging
+                        $helm upgrade jenkins-cast-service . --values=cast-service/values.yaml -n dev
+                        $helm upgrade jenkins-cast-service . --values=cast-service/values.yaml -n qa
+                        $helm upgrade jenkins-cast-service . --values=cast-service/values.yaml -n staging
                         '''
                     } else if (env.SERVICE_UPGRADE == 'Upgrade movie-service') {
                         // Add steps to update service3
                         sh'''
-                        $helm upgrade jenkins-movie-service . --values=values.yaml -n dev
-                        $helm upgrade jenkins-movie-service . --values=values.yaml -n qa
-                        $helm upgrade jenkins-movie-service . --values=values.yaml -n staging
+                        $helm upgrade jenkins-movie-service . --values=movie-service/values.yaml -n dev
+                        $helm upgrade jenkins-movie-service . --values=movie-service/values.yaml -n qa
+                        $helm upgrade jenkins-movie-service . --values=movie-service/values.yaml -n staging
                         '''
                     } else {
                         error 'Invalid service selected'
