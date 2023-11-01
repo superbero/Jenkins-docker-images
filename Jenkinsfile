@@ -205,7 +205,7 @@ pipeline{
                         ]
                     )
                     env.SERVICE_UPGRADE = userInput
-                    if (eenv.SERVICE_UPGRADE == 'Upgrade api-service') {
+                    if (env.SERVICE_UPGRADE == 'Upgrade api-service') {
                         sh '''
                         $helm upgrade jenkins-api-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-api-service . --values=values.yaml -n qa
