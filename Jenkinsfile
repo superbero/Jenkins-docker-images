@@ -60,7 +60,7 @@ pipeline{
                         id: 'userInput',
                         message: 'Select the service to update:',
                         parameters: [
-                            choice(name: 'Service', choices: 'New Deployment\nUpgrade api-service\nUpgrade database\nUpgrade movie-service\nUpgrade cast-service', description: 'Select the service')
+                            choice(name: 'Service', choices: 'New Deployment\nService Upgrade', description: 'Select the service')
                         ]
                     )
                     env.SERVICE_NAME = userInput
@@ -87,6 +87,9 @@ pipeline{
         }
         
         stage("Deploy database") {
+            when{
+                expression { env.SERVICE_NAME == 'New Deployment'} 
+            }
             steps{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
@@ -110,6 +113,9 @@ pipeline{
             }
         }
         stage("Deploy movie-service"){
+            when{
+                expression { env.SERVICE_NAME == 'New Deployment'} 
+            }
             steps{
                 script{
                     sleep(60)
@@ -134,6 +140,9 @@ pipeline{
             }
         }
         stage("Deploying cast-service"){
+            when{
+                expression { env.SERVICE_NAME == 'New Deployment'} 
+            }
             steps{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
@@ -157,6 +166,9 @@ pipeline{
             }
         }
         stage("Deploying api-service"){
+            when{
+                expression { env.SERVICE_NAME == 'New Deployment'} 
+            }
             steps{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
@@ -185,28 +197,36 @@ pipeline{
             }
             steps {
                 script {
-                    if (env.SERVICE_NAME == 'Upgrade api-service') {
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Select the service to update:',
+                        parameters: [
+                            choice(name: 'Service', choices: 'Upgrade api-service\nUpgrade database\nUpgrade movie-service\nUpgrade cast-service', description: 'Select the service you want to upgrade:')
+                        ]
+                    )
+                    env.SERVICE_UPGRADE = userInput
+                    if (eenv.SERVICE_UPGRADE == 'Upgrade api-service') {
                         sh '''
                         $helm upgrade jenkins-api-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-api-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-api-service . --values=values.yaml -n staging
                         '''
                         // Add steps to update service1
-                    } else if (env.SERVICE_NAME == 'Upgrade database') {
+                    } else if (env.SERVICE_UPGRADE == 'Upgrade database') {
                         sh '''
                         $helm upgrade jenkins-database-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-database-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-database-service . --values=values.yaml -n staging
                         '''
                         // Add steps to update service2
-                    } else if (env.SERVICE_NAME == 'Upgrade cast-service') {
+                    } else if (env.SERVICE_UPGRADE == 'Upgrade cast-service') {
                         // Add steps to update service2
                         sh '''
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n dev
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n qa
                         $helm upgrade jenkins-cast-service . --values=values.yaml -n staging
                         '''
-                    } else if (env.SERVICE_NAME == 'Upgrade movie-service') {
+                    } else if (env.SERVICE_UPGRADE == 'Upgrade movie-service') {
                         // Add steps to update service3
                         sh'''
                         $helm upgrade jenkins-movie-service . --values=values.yaml -n dev
