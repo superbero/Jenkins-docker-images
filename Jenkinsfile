@@ -53,7 +53,25 @@ pipeline{
                 '''
             }
         }
+        stage('Select Service') {
+            steps {
+                script {
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Select the service to update:',
+                        parameters: [
+                            choice(name: 'Service', choices: 'New Deployment\nUpgrade api-service\nUpgrade database\nUpgrade movie-service\nUpgrade cast-service', description: 'Select the service')
+                        ]
+                    )
+                    env.SERVICE_NAME = userInput
+                    echo env.SERVICE_NAME
+                }
+            }
+        }
         stage ("Deploy volumes"){
+            when{
+                expression == 'New Deployment'
+            }
             steps {
                 sh '''
                 $kubectl apply -f namespaces_volumes/volumes/
@@ -67,6 +85,7 @@ pipeline{
                 '''
             }
         }
+        
         stage("Deploy database") {
             steps{
                 script{
@@ -137,5 +156,53 @@ pipeline{
                 }
             }
         }
+        stage("Deploying api-service"){
+            steps{
+                script{
+                    def namespaces = ['dev', 'staging', 'qa']
+                        namespaces.each { namespace ->
+                        echo "Deploying ${namespace} node"
+                        try 
+                        {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' api-service/values.yaml"
+                            sh "$helm install jenkins-api-service api-service/ --values=api-service/values.yaml -n ${namespace}"
+                            sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' api-service/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
+            
+                        } catch(Exception e)
+                        {
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
+// es {
+        
+
+//         stage('Update Service') {
+//             when {
+//                 expression { env.SERVICE_NAME != null }
+//             }
+//             steps {
+//                 script {
+//                     if (env.SERVICE_NAME == 'service1') {
+//                         // Add steps to update service1
+//                     } else if (env.SERVICE_NAME == 'service2') {
+//                         // Add steps to update service2
+//                     } else if (env.SERVICE_NAME == 'service3') {
+//                         // Add steps to update service3
+//                     } else {
+//                         error 'Invalid service selected'
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
