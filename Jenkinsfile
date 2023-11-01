@@ -181,18 +181,30 @@ pipeline{
         }
         stage('Update Service') {
             when {
-                expression { env.SERVICE_NAME != null }
+                expression { env.SERVICE_NAME != 'New Deployment' }
             }
             steps {
                 script {
                     if (env.SERVICE_NAME == 'Upgrade api-service') {
+                        $helm upgrade jenkins-api-service . --values=values.yaml -n dev
+                        $helm upgrade jenkins-api-service . --values=values.yaml -n qa
+                        $helm upgrade jenkins-api-service . --values=values.yaml -n staging
                         // Add steps to update service1
                     } else if (env.SERVICE_NAME == 'Upgrade database') {
+                        $helm upgrade jenkins-database-service . --values=values.yaml -n dev
+                        $helm upgrade jenkins-database-service . --values=values.yaml -n qa
+                        $helm upgrade jenkins-database-service . --values=values.yaml -n staging
                         // Add steps to update service2
                     } else if (env.SERVICE_NAME == 'Upgrade cast-service') {
                         // Add steps to update service2
+                        $helm upgrade jenkins-cast-service . --values=values.yaml -n dev
+                        $helm upgrade jenkins-cast-service . --values=values.yaml -n qa
+                        $helm upgrade jenkins-cast-service . --values=values.yaml -n staging
                     } else if (env.SERVICE_NAME == 'Upgrade movie-service') {
                         // Add steps to update service3
+                        $helm upgrade jenkins-movie-service . --values=values.yaml -n dev
+                        $helm upgrade jenkins-movie-service . --values=values.yaml -n qa
+                        $helm upgrade jenkins-movie-service . --values=values.yaml -n staging
                     } else {
                         error 'Invalid service selected'
                     }
