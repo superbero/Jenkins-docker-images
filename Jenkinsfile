@@ -93,6 +93,7 @@ pipeline{
         stage("Deploy movie-service"){
             steps{
                 script{
+                    sleep(60)
                     def namespaces = ['dev', 'staging', 'qa']
                         namespaces.each { namespace ->
                         echo "Deploying ${namespace} node"
