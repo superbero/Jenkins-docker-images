@@ -122,7 +122,7 @@ pipeline{
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' cast-service/values.yaml"
-                            sh "$helm install jenkins-cast-service movie-service/ --values=cast-service/values.yaml -n ${namespace}"
+                            sh "$helm install jenkins-cast-service cast-service/ --values=cast-service/values.yaml -n ${namespace}"
                             sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' cast-service/values.yaml"
                             sh "$kubectl get all -n ${namespace}"
             
