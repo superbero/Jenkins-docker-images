@@ -179,30 +179,25 @@ pipeline{
                 }
             }
         }
+        stage('Update Service') {
+            when {
+                expression { env.SERVICE_NAME != null }
+            }
+            steps {
+                script {
+                    if (env.SERVICE_NAME == 'Upgrade api-service') {
+                        // Add steps to update service1
+                    } else if (env.SERVICE_NAME == 'Upgrade database') {
+                        // Add steps to update service2
+                    } else if (env.SERVICE_NAME == 'Upgrade cast-service') {
+                        // Add steps to update service2
+                    } else if (env.SERVICE_NAME == 'Upgrade movie-service') {
+                        // Add steps to update service3
+                    } else {
+                        error 'Invalid service selected'
+                    }
+                }
+            }
+        }
     }
 }
-
-// es {
-        
-
-//         stage('Update Service') {
-//             when {
-//                 expression { env.SERVICE_NAME != null }
-//             }
-//             steps {
-//                 script {
-//                     if (env.SERVICE_NAME == 'service1') {
-//                         // Add steps to update service1
-//                     } else if (env.SERVICE_NAME == 'service2') {
-//                         // Add steps to update service2
-//                     } else if (env.SERVICE_NAME == 'service3') {
-//                         // Add steps to update service3
-//                     } else {
-//                         error 'Invalid service selected'
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
-
