@@ -225,6 +225,7 @@ pipeline{
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
                         }
+                        }
                         // Add steps to update service1
                     } else if (env.SERVICE_UPGRADE == 'Upgrade database') {
                         namespaces.each { namespace ->
@@ -242,7 +243,7 @@ pipeline{
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
                         }
-                        // Add steps to update service2
+                        }// Add steps to update service2
                     } else if (env.SERVICE_UPGRADE == 'Upgrade cast-service') {
                         // Add steps to update service2
                         namespaces.each { namespace ->
@@ -259,6 +260,7 @@ pipeline{
                             echo "Namespace ${namespace} not found, creating..."
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
+                        }
                         }
                     } else if (env.SERVICE_UPGRADE == 'Upgrade movie-service') {
                         // Add steps to update service3
@@ -277,7 +279,7 @@ pipeline{
                             currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
                             sh "$kubectl get all -n ${namespace}"
                         }
-                    } else {
+                    }} else {
                         error 'Invalid service selected'
                     }
                 }
