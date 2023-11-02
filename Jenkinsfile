@@ -97,7 +97,7 @@ pipeline{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
                         namespaces.each { namespace ->
-                        echo "Deploying ${namespace} node"
+                        echo "Deploying ${namespace} environment"
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' databases/postgres/values.yaml"
@@ -124,7 +124,7 @@ pipeline{
                     sleep(60)
                     def namespaces = ['dev', 'staging', 'qa']
                         namespaces.each { namespace ->
-                        echo "Deploying ${namespace} node"
+                        echo "Deploying ${namespace} environment"
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' movie-service/values.yaml"
@@ -150,7 +150,7 @@ pipeline{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
                         namespaces.each { namespace ->
-                        echo "Deploying ${namespace} node"
+                        echo "Deploying ${namespace} environment"
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' cast-service/values.yaml"
@@ -176,7 +176,7 @@ pipeline{
                 script{
                     def namespaces = ['dev', 'staging', 'qa']
                         namespaces.each { namespace ->
-                        echo "Deploying ${namespace} node"
+                        echo "Deploying ${namespace} environment"
                         try 
                         {
                             sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' api-service/values.yaml"
@@ -208,34 +208,75 @@ pipeline{
                         ]
                     )
                     env.SERVICE_UPGRADE = userInput
+                    def namespaces = ['dev', 'staging', 'qa']
                     if (env.SERVICE_UPGRADE == 'Upgrade api-service') {
-                        sh '''
-                        $helm upgrade jenkins-api-service api-service/. --values=api-service/values.yaml -n dev
-                        $helm upgrade jenkins-api-service api-service/. --values=api-service/values.yaml -n qa
-                        $helm upgrade jenkins-api-service api-service/. --values=api-service/values.yaml -n staging
-                        '''
+                        namespaces.each { namespace ->
+                        echo "Upgrading api-service in ${namespace} environment"
+                        try 
+                        {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' api-service/values.yaml"
+                            sh "$helm upgrade jenkins-api-service api-service/. --values=api-service/values.yaml -n ${namespace}"
+                            sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' api-service/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
+            
+                        } catch(Exception e)
+                        {
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                        }
                         // Add steps to update service1
                     } else if (env.SERVICE_UPGRADE == 'Upgrade database') {
-                        sh '''
-                        $helm upgrade jenkins-database-service databases/postgres/. --values=databases/postgres/values.yaml -n dev
-                        $helm upgrade jenkins-database-service databases/postgres/. --values=databases/postgres/values.yaml -n qa
-                        $helm upgrade jenkins-database-service databases/postgres/. --values=databases/postgres/values.yaml -n staging
-                        '''
+                        namespaces.each { namespace ->
+                        echo "Upgrading database in ${namespace} environment"
+                        try 
+                        {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' api-service/values.yaml"
+                            sh "$helm upgrade jenkins-database-service databases/postgres/. --values=databases/postgres/values.yaml -n ${namespace}"
+                            sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' databases/postgres/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
+            
+                        } catch(Exception e)
+                        {
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                        }
                         // Add steps to update service2
                     } else if (env.SERVICE_UPGRADE == 'Upgrade cast-service') {
                         // Add steps to update service2
-                        sh '''
-                        $helm upgrade jenkins-cast-service cast-service/. --values=cast-service/values.yaml -n dev
-                        $helm upgrade jenkins-cast-service cast-service/. --values=cast-service/values.yaml -n qa
-                        $helm upgrade jenkins-cast-service cast-service/. --values=cast-service/values.yaml -n staging
-                        '''
+                        namespaces.each { namespace ->
+                        echo "Upgrading cast-service in ${namespace} environment"
+                        try 
+                        {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' cast-service/values.yaml"
+                            sh "$helm upgrade jenkins-cast-service cast-service/. --values=cast-service/values.yaml -n ${namespace}"
+                            sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' cast-service/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
+            
+                        } catch(Exception e)
+                        {
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                        }
                     } else if (env.SERVICE_UPGRADE == 'Upgrade movie-service') {
                         // Add steps to update service3
-                        sh'''
-                        $helm upgrade jenkins-movie-service movie-service/. --values=movie-service/values.yaml -n dev
-                        $helm upgrade jenkins-movie-service movie-service/. --values=movie-service/values.yaml -n qa
-                        $helm upgrade jenkins-movie-service movie-service/. --values=movie-service/values.yaml -n staging
-                        '''
+                        namespaces.each { namespace ->
+                        echo "Upgrading database in ${namespace} environment"
+                        try 
+                        {
+                            sh "sed -i.bak 's/namespace: dev/namespace: ${namespace} /g' movie-service/values.yaml"
+                            sh "$helm upgrade jenkins-movie-service movie-service/. --values=movie-service/values.yaml -n ${namespace}"
+                            sh "sed -i.bak 's/namespace: ${namespace}/namespace: dev /g' movie-service/values.yaml"
+                            sh "$kubectl get all -n ${namespace}"
+            
+                        } catch(Exception e)
+                        {
+                            echo "Namespace ${namespace} not found, creating..."
+                            currentBuild.result = 'UNSTABLE' // Set build result to UNSTABLE
+                            sh "$kubectl get all -n ${namespace}"
+                        }
                     } else {
                         error 'Invalid service selected'
                     }
